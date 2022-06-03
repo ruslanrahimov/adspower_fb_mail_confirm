@@ -1,0 +1,19 @@
+{
+  "name": "fb_mail_confirm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "puppeteer-core": "^14.1.1"
+  },
+  "devDependencies": {
+    "simple-log-colors": "^1.1.0"
+  }
+}
