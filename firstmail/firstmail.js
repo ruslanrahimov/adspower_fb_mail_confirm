@@ -1,5 +1,28 @@
 const colors = require('simple-log-colors')
 
+async function isMailValid(page, login, password) {
+    console.log(`${colors.magenta('Проверяю валидность почты...')}`)
+    try {
+        await page.goto('http://zaushholding.space/webmail/')
+        const inputLogin = await page.waitForXPath(`//input[@id="selenium_login_email"]`, {timeout: 20000})
+        await inputLogin.type(login, {delay: 10})
+
+        const inputPassword = await page.waitForXPath(`//input[@id="selenium_login_password"]`, {timeout: 20000})
+        await inputPassword.type(password, {delay: 10})
+
+        const buttonSubmit = await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
+        await buttonSubmit.click()
+
+        const logoutButton = await page.waitForXPath(`//span[@id="selenium_logout_button"]`)
+        await logoutButton.click()
+
+        return 'VALID'
+    } catch (e) {
+        await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
+        return 'NO VALID'
+    }
+}
+
 async function main(page, login, password) {
 
     const checkInbox = async () => {
@@ -91,3 +114,4 @@ async function main(page, login, password) {
 }
 
 module.exports.getCode = main;
+module.exports.isMailValid = isMailValid;
