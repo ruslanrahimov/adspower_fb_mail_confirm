@@ -58,11 +58,15 @@ async function mailConfirm(id) {
             const submitFormButton = await iframe.waitForXPath(`(//button[@type="submit"])[2]`, {visible: true});
             await submitFormButton.click({delay: 10});
 
-            const accountPasswordConfirm = await iframe.waitForXPath(`//input[@id="ajax_password"]`);
-            await accountPasswordConfirm.type(accountPassword, {delay: 10});
+            try {
+                const accountPasswordConfirm = await iframe.waitForXPath(`//input[@id="ajax_password"]`);
+                await accountPasswordConfirm.type(accountPassword, {delay: 10});
 
-            const accountPasswordConfirmBtn = await iframe.waitForXPath(`//button[@data-testid="sec_ac_button"]`);
-            await accountPasswordConfirmBtn.click();
+                const accountPasswordConfirmBtn = await iframe.waitForXPath(`//button[@data-testid="sec_ac_button"]`);
+                await accountPasswordConfirmBtn.click();
+            } catch (e) {
+                console.log('Подтверждение паролем не нужно')
+            }
 
             let closeButton = await iframe.waitForXPath(`//a[text()='Закрыть']`);
             await closeButton.click();
