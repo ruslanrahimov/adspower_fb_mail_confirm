@@ -18,8 +18,13 @@ async function isMailValid(page, login, password) {
 
         return 'VALID'
     } catch (e) {
-        await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
-        return 'NO VALID'
+        try {
+            await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
+            return 'NO VALID'
+        } catch (err) {
+            await page.waitForXPath('//div[@class="folders"]')
+            return 'VALID'
+        }
     }
 }
 
@@ -63,16 +68,9 @@ async function main(page, login, password) {
         try {
             await page.goto('http://zaushholding.space/webmail/', {waitUntil: 'networkidle0'})
                 .catch(async () => await page.goto('http://zaushholding.space/webmail/', {waitUntil: 'networkidle0'}))
-
-            const inputLogin = await page.waitForXPath(`//input[@id="selenium_login_email"]`, {timeout: 20000})
-            await inputLogin.type(login, {delay: 10})
-
-            const inputPassword = await page.waitForXPath(`//input[@id="selenium_login_password"]`, {timeout: 20000})
-            await inputPassword.type(password, {delay: 10})
-
-            const buttonSubmit = await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
-            await buttonSubmit.click()
-
+            await page.waitForXPath(`//input[@id="selenium_login_email"]`, {timeout: 20000}).then(async inputLogin => await inputLogin.type(login, {delay: 10}))
+            await page.waitForXPath(`//input[@id="selenium_login_password"]`, {timeout: 20000}).then(async inputPassword => await inputPassword.type(password, {delay: 10}))
+            await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000}).then(async buttonSubmit => await buttonSubmit.click())
         } catch (e) {
             await page.waitForXPath('//div[@class="folders"]').then(() => console.info(colors.yellow('Уже авторизован')))
         }
