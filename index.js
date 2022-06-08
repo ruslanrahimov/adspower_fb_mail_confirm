@@ -7,14 +7,13 @@ const adspower = require("./adspower");
 const colors = require("simple-log-colors");
 
 async function mailConfirm(id) {
-    const res = await axios.get(`http://local.adspower.net:50325/api/v1/browser/start?user_id=${id}&launch_args=["--start-fullscreen","--disable-web-security","--disable-features=IsolateOrigins,site-per-process"]`);
+    const res = await axios.get(`http://local.adspower.net:50325/api/v1/browser/start?user_id=${id}&launch_args=["--start-maximized","--window-size=1920,1080","--disable-web-security","--disable-features=IsolateOrigins,site-per-process"]`);
 
     if (res.data.code === 0 && res.data.data.ws && res.data.data.ws.puppeteer) {
         const browser = await puppeteer.connect({
             browserWSEndpoint: res.data.data.ws.puppeteer, defaultViewport: null,
         });
         const page = await browser.newPage();
-
         //Данные для входа в сервис zaush.ru
         const mailData = fs
             .readFileSync(path.resolve(__dirname, "src", "data.txt"), "utf-8")
@@ -33,7 +32,6 @@ async function mailConfirm(id) {
 
         try {
             const mailValidStatus = await zaush.isMailValid(page, emailAddress, emailPassword)
-
             if (mailValidStatus === 'NO VALID') {
                 console.log(`${colors.red('Неправильные эл. почта, логин и/или пароль. Неудачная аутентификация.')}`)
                 return {
