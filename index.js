@@ -40,9 +40,7 @@ async function mailConfirm(id) {
             }
             console.log(mailValidStatus)
 
-            await page.goto("https://www.facebook.com/settings?tab=account&section=email", {
-                timeout: 0, waitUntil: "networkidle0",
-            }).catch(async () => {
+            await page.goto("https://www.facebook.com/settings?tab=account&section=email").catch(async () => {
                 await page.goto("https://www.facebook.com/settings?tab=account&section=email")
             })
 
@@ -83,9 +81,8 @@ async function mailConfirm(id) {
                 };
             }
 
-            await page.goto("https://www.facebook.com/settings?tab=account&section=email", {
-                timeout: 0, waitUntil: "networkidle0",
-            });
+            await page.goto("https://www.facebook.com/settings?tab=account&section=email")
+                  .catch(async () => await page.goto("https://www.facebook.com/settings?tab=account&section=email"));
 
             iframe = await (await page.waitForXPath(`//iframe`)).contentFrame();
 

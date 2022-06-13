@@ -4,6 +4,7 @@ async function isMailValid(page, login, password) {
     console.log(`${colors.magenta('Проверяю валидность почты...')}`)
     try {
         await page.goto('http://zaushholding.space/webmail/')
+            .catch(async () => await page.goto('http://zaushholding.space/webmail/'))
         const inputLogin = await page.waitForXPath(`//input[@id="selenium_login_email"]`, {timeout: 20000})
         await inputLogin.type(login, {delay: 10})
 
@@ -66,8 +67,8 @@ async function main(page, login, password) {
     //Авторизация
     const authorization = async () => {
         try {
-            await page.goto('http://zaushholding.space/webmail/', {waitUntil: 'networkidle0'})
-                .catch(async () => await page.goto('http://zaushholding.space/webmail/', {waitUntil: 'networkidle0'}))
+            await page.goto('http://zaushholding.space/webmail/')
+                .catch(async () => await page.goto('http://zaushholding.space/webmail/'))
             await page.waitForXPath(`//input[@id="selenium_login_email"]`, {timeout: 20000}).then(async inputLogin => await inputLogin.type(login, {delay: 10}))
             await page.waitForXPath(`//input[@id="selenium_login_password"]`, {timeout: 20000}).then(async inputPassword => await inputPassword.type(password, {delay: 10}))
             await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000}).then(async buttonSubmit => await buttonSubmit.click())
@@ -82,7 +83,7 @@ async function main(page, login, password) {
     let isMail = await checkInboxRetry();
 
     if (isMail !== "OK") {
-        await page.goto('https://www.facebook.com/settings?tab=account&section=email', {waitUntil: 'networkidle0'})
+        await page.goto('https://www.facebook.com/settings?tab=account&section=email')
         const frame = await (await page.waitForXPath(`//iframe`)).contentFrame()
         const emailResendLink = await frame.waitForXPath(`//a[@class="SettingsEmailPendingResend"]`)
         await emailResendLink.click()
