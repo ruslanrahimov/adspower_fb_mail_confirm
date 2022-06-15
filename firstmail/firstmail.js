@@ -5,7 +5,7 @@ async function isMailValid(page, login, password) {
     try {
         await page.goto('http://zaushholding.space/webmail/')
             .catch(async () => await page.goto('http://zaushholding.space/webmail/'))
-        await page.waitForXPath(`//span[@id="selenium_logout_button"]`, {timeout: 7000}).then(async logout => await logout.click).catch(() => {
+        await page.waitForXPath(`//span[@id="selenium_logout_button"]`, {timeout: 7000}).then(async logout => await logout.click()).catch(() => {
             return;
         })
         const inputLogin = await page.waitForXPath(`//input[@id="selenium_login_email"]`, {timeout: 20000})
