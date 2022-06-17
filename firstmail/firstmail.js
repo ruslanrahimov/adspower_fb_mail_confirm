@@ -23,8 +23,16 @@ async function isMailValid(page, login, password) {
         return 'VALID'
     } catch (e) {
         try {
-            await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
-            return 'NO VALID'
+            try {
+                await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000}).then(async button => await button.click())
+                await page.waitForXPath('//div[@class="folders"]')
+                await page.waitForXPath(`//span[@id="selenium_logout_button"]`).then(async button => await button.click())
+                return 'VALID'
+            } catch (e) {
+                await page.waitForXPath(`//button[@id="selenium_login_signin_button"]`, {timeout: 20000})
+                return 'NO VALID'
+            }
+
         } catch (err) {
             await page.waitForXPath('//div[@class="folders"]')
             return 'VALID'
